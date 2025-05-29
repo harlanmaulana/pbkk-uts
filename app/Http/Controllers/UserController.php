@@ -94,4 +94,4 @@ class UserController extends Controller
             return response()->json(['message' => 'User tidak ditemukan.'], 404);
         }
     }
-}
+ }
