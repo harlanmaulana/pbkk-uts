@@ -6,13 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Books extends Model
 {
-    protected $table = 'books'; // Nama tabel
-    protected $primaryKey = 'book_id'; // Primary key yang digunakan
-    public $incrementing = false; // Karena ULID/UUID tidak auto increment
-    protected $keyType = 'string'; // Karena ULID/UUID bertipe string
+    // Table name
+    protected $table = 'books';
 
+    // Primary key settings
+    protected $primaryKey = 'book_id';
+    public $incrementing = false;
+    protected $keyType = 'string';
+
+    // Mass assignable attributes
     protected $fillable = [
-        'book_id',       // Ditambahkan di sini
+        'book_id',
         'title',
         'isbn',
         'publisher',

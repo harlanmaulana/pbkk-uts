@@ -10,11 +10,17 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class BooksController extends Controller
 {
+    /**
+     * Display a listing of all books.
+     */
     public function index(): JsonResponse
     {
         return response()->json(Books::all());
     }
 
+    /**
+     * Store a newly created book in storage.
+     */
     public function store(Request $request): JsonResponse
     {
         $validated = $request->validate([
@@ -25,7 +31,7 @@ class BooksController extends Controller
             'stock' => 'required|integer',
         ]);
 
-        // Tambahkan book_id (ULID) secara otomatis
+        // Generate ULID for book_id
         $validated['book_id'] = (string) Str::ulid();
 
         $book = Books::create($validated);
@@ -33,7 +39,10 @@ class BooksController extends Controller
         return response()->json($book, 201);
     }
 
-    public function show($id): JsonResponse
+    /**
+     * Display the specified book by ID.
+     */
+    public function show(string $id): JsonResponse
     {
         try {
             $book = Books::findOrFail($id);
@@ -43,7 +52,10 @@ class BooksController extends Controller
         }
     }
 
-    public function update(Request $request, $id): JsonResponse
+    /**
+     * Update the specified book in storage.
+     */
+    public function update(Request $request, string $id): JsonResponse
     {
         try {
             $book = Books::findOrFail($id);
@@ -64,7 +76,10 @@ class BooksController extends Controller
         }
     }
 
-    public function destroy($id): JsonResponse
+    /**
+     * Remove the specified book from storage.
+     */
+    public function destroy(string $id): JsonResponse
     {
         try {
             $book = Books::findOrFail($id);

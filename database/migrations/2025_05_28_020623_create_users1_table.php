@@ -12,7 +12,7 @@ class CreateUsers1Table extends Migration
             $table->string('user_id')->primary();
             $table->string('name', 50);
             $table->string('email', 50)->unique();
-            $table->char('password', 50);
+            $table->char('password', 60); // Disarankan 60 untuk hash bcrypt
             $table->date('membership_date');
             $table->timestamps();
         });

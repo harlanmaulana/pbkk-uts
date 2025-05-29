@@ -12,7 +12,7 @@ class CreateAuthorsTable extends Migration
             $table->string('author_id')->primary();
             $table->string('name');
             $table->string('nationality');
-            $table->string('birthdate');
+            $table->date('birthdate');
             $table->timestamps();
         });
     }

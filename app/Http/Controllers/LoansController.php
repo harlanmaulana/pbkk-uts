@@ -2,18 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Loan;
 use App\Models\Loans;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class LoansController extends Controller
 {
-    public function index()
+    /**
+     * Display a listing of all loans with related user and book.
+     */
+    public function index(): JsonResponse
     {
-        return response()->json(Loans::with(['user', 'book'])->get());
+        $loans = Loans::with(['user', 'book'])->get();
+        return response()->json($loans);
     }
 
-    public function store(Request $request)
+    /**
+     * Store a newly created loan.
+     */
+    public function store(Request $request): JsonResponse
     {
         $validated = $request->validate([
             'user_id' => 'required|exists:users1,user_id',
@@ -25,31 +33,52 @@ class LoansController extends Controller
         return response()->json($loan, 201);
     }
 
-    public function show($id)
+    /**
+     * Display the specified loan by ID with user and book relation.
+     */
+    public function show(string $id): JsonResponse
     {
-        $loan = Loans::with(['user', 'book'])->findOrFail($id);
-        return response()->json($loan);
+        try {
+            $loan = Loans::with(['user', 'book'])->findOrFail($id);
+            return response()->json($loan);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['message' => 'Loan not found'], 404);
+        }
     }
 
-    public function update(Request $request, $id)
+    /**
+     * Update the specified loan.
+     */
+    public function update(Request $request, string $id): JsonResponse
     {
-        $loan = Loans::findOrFail($id);
+        try {
+            $loan = Loans::findOrFail($id);
 
-        $validated = $request->validate([
-            'user_id' => 'sometimes|required|exists:users1,user_id',
-            'book_id' => 'sometimes|required|exists:books,book_id',
-        ]);
+            $validated = $request->validate([
+                'user_id' => 'sometimes|required|exists:users1,user_id',
+                'book_id' => 'sometimes|required|exists:books,book_id',
+            ]);
 
-        $loan->update($validated);
+            $loan->update($validated);
 
-        return response()->json($loan);
+            return response()->json($loan);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['message' => 'Loan not found'], 404);
+        }
     }
 
-    public function destroy($id)
+    /**
+     * Remove the specified loan from storage.
+     */
+    public function destroy(string $id): JsonResponse
     {
-        $loan = Loans::findOrFail($id);
-        $loan->delete();
+        try {
+            $loan = Loans::findOrFail($id);
+            $loan->delete();
 
-        return response()->json(null, 204);
+            return response()->json(null, 204);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['message' => 'Loan not found'], 404);
+        }
     }
 }

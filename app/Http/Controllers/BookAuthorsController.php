@@ -1,17 +1,26 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\BookAuthors;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 
 class BookAuthorsController extends Controller
 {
-    public function index()
+    /**
+     * Display a listing of the book-author relationships.
+     */
+    public function index(): JsonResponse
     {
-        return response()->json(BookAuthors::with(['book', 'author'])->get());
+        $data = BookAuthors::with(['book', 'author'])->get();
+        return response()->json($data);
     }
 
-    public function store(Request $request)
+    /**
+     * Store a newly created book-author relationship.
+     */
+    public function store(Request $request): JsonResponse
     {
         $validated = $request->validate([
             'book_id' => 'required|exists:books,book_id',
@@ -23,13 +32,19 @@ class BookAuthorsController extends Controller
         return response()->json($bookAuthor, 201);
     }
 
-    public function show($id)
+    /**
+     * Display the specified book-author relationship.
+     */
+    public function show($id): JsonResponse
     {
         $bookAuthor = BookAuthors::with(['book', 'author'])->findOrFail($id);
         return response()->json($bookAuthor);
     }
 
-    public function update(Request $request, $id)
+    /**
+     * Update the specified book-author relationship.
+     */
+    public function update(Request $request, $id): JsonResponse
     {
         $bookAuthor = BookAuthors::findOrFail($id);
 
@@ -43,7 +58,10 @@ class BookAuthorsController extends Controller
         return response()->json($bookAuthor);
     }
 
-    public function destroy($id)
+    /**
+     * Remove the specified book-author relationship.
+     */
+    public function destroy($id): JsonResponse
     {
         $bookAuthor = BookAuthors::findOrFail($id);
         $bookAuthor->delete();

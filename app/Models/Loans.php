@@ -2,20 +2,27 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Str;
 
 class Loans extends Model
 {
     use HasFactory;
 
+    // Primary key settings
     protected $primaryKey = 'loan_id';
     public $incrementing = false;
     protected $keyType = 'string';
 
-    protected $fillable = ['loan_id', 'user_id', 'book_id'];
+    // Mass assignable attributes
+    protected $fillable = [
+        'loan_id',
+        'user_id',
+        'book_id',
+    ];
 
+    // Automatically generate ULID for primary key
     protected static function boot()
     {
         parent::boot();
@@ -27,6 +34,7 @@ class Loans extends Model
         });
     }
 
+    // Relationships
     public function user()
     {
         return $this->belongsTo(Users1::class, 'user_id', 'user_id');

@@ -4,20 +4,24 @@ namespace App\Http\Controllers;
 
 use App\Models\Users1;
 use Illuminate\Http\Request;
-use App\Models\User;
 use Illuminate\Http\JsonResponse;
-use App\Http\Resources\UserResource;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-
 
 class Users1Controller extends Controller
 {
-    public function index()
+    /**
+     * Tampilkan semua users.
+     */
+    public function index(): JsonResponse
     {
-        return response()->json(Users1::all());
+        $users = Users1::all();
+        return response()->json($users, 200);
     }
 
-    public function store(Request $request)
+    /**
+     * Tambah user baru.
+     */
+    public function store(Request $request): JsonResponse
     {
         $validated = $request->validate([
             'name' => 'required|string|max:50',
@@ -31,33 +35,54 @@ class Users1Controller extends Controller
         return response()->json($user, 201);
     }
 
-    public function show($id)
+    /**
+     * Tampilkan user berdasarkan ID.
+     */
+    public function show(string $id): JsonResponse
     {
-        $user = Users1::findOrFail($id);
-        return response()->json($user);
+        try {
+            $user = Users1::findOrFail($id);
+            return response()->json($user, 200);
+        } catch (ModelNotFoundException) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
     }
 
-    public function update(Request $request, $id)
+    /**
+     * Update data user.
+     */
+    public function update(Request $request, string $id): JsonResponse
     {
-        $user = Users1::findOrFail($id);
+        try {
+            $user = Users1::findOrFail($id);
 
-        $validated = $request->validate([
-            'name' => 'sometimes|required|string|max:50',
-            'email' => 'sometimes|required|email|unique:users1,email,' . $id . ',user_id',
-            'password' => 'sometimes|required|string|max:50',
-            'membership_date' => 'sometimes|required|date',
-        ]);
+            $validated = $request->validate([
+                'name' => 'sometimes|required|string|max:50',
+                'email' => 'sometimes|required|email|unique:users1,email,' . $id . ',user_id',
+                'password' => 'sometimes|required|string|max:50',
+                'membership_date' => 'sometimes|required|date',
+            ]);
 
-        $user->update($validated);
+            $user->update($validated);
 
-        return response()->json($user);
+            return response()->json($user, 200);
+        } catch (ModelNotFoundException) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
     }
 
-    public function destroy($id)
+    /**
+     * Hapus user berdasarkan ID.
+     */
+    public function destroy(string $id): JsonResponse
     {
-        $user = Users1::findOrFail($id);
-        $user->delete();
+        try {
+            $user = Users1::findOrFail($id);
+            $user->delete();
 
-        return response()->json(null, 204);
+            return response()->json(null, 204);
+        } catch (ModelNotFoundException) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
     }
 }

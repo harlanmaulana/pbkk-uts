@@ -3,20 +3,24 @@
 namespace App\Http\Controllers;
 
 use App\Models\Authors;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use App\Http\Resources\UserResource;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class AuthorsController extends Controller
 {
-    public function index()
+    /**
+     * Display a listing of the authors.
+     */
+    public function index(): JsonResponse
     {
         return response()->json(Authors::all());
     }
 
-    public function store(Request $request)
+    /**
+     * Store a newly created author in storage.
+     */
+    public function store(Request $request): JsonResponse
     {
         $validated = $request->validate([
             'name' => 'required|string',
@@ -29,13 +33,19 @@ class AuthorsController extends Controller
         return response()->json($author, 201);
     }
 
-    public function show($id)
+    /**
+     * Display the specified author.
+     */
+    public function show($id): JsonResponse
     {
         $author = Authors::findOrFail($id);
         return response()->json($author);
     }
 
-    public function update(Request $request, $id)
+    /**
+     * Update the specified author in storage.
+     */
+    public function update(Request $request, $id): JsonResponse
     {
         $author = Authors::findOrFail($id);
 
@@ -50,7 +60,10 @@ class AuthorsController extends Controller
         return response()->json($author);
     }
 
-    public function destroy($id)
+    /**
+     * Remove the specified author from storage.
+     */
+    public function destroy($id): JsonResponse
     {
         $author = Authors::findOrFail($id);
         $author->delete();

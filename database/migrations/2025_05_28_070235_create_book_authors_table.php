@@ -14,8 +14,15 @@ class CreateBookAuthorsTable extends Migration
             $table->string('author_id');
             $table->timestamps();
 
-            $table->foreign('book_id')->references('book_id')->on('books')->onDelete('cascade');
-            $table->foreign('author_id')->references('author_id')->on('authors')->onDelete('cascade');
+            $table->foreign('book_id')
+                ->references('book_id')
+                ->on('books')
+                ->onDelete('cascade');
+
+            $table->foreign('author_id')
+                ->references('author_id')
+                ->on('authors')
+                ->onDelete('cascade');
         });
     }
 

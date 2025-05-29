@@ -4,7 +4,6 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-
 return new class extends Migration {
     public function up(): void
     {
@@ -14,8 +13,15 @@ return new class extends Migration {
             $table->string('book_id');
             $table->timestamps();
 
-            $table->foreign('user_id')->references('user_id')->on('users1')->onDelete('cascade');
-            $table->foreign('book_id')->references('book_id')->on('books')->onDelete('cascade');
+            $table->foreign('user_id')
+                ->references('user_id')
+                ->on('users1')
+                ->onDelete('cascade');
+
+            $table->foreign('book_id')
+                ->references('book_id')
+                ->on('books')
+                ->onDelete('cascade');
         });
     }
 

@@ -2,22 +2,20 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Str;
-use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\Concerns\HasUlids;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class Authors extends Model
 {
     use HasFactory;
 
+    // Primary key settings
     protected $primaryKey = 'author_id';
     public $incrementing = false;
     protected $keyType = 'string';
 
+    // Mass assignable attributes
     protected $fillable = [
         'author_id',
         'name',
@@ -25,9 +23,11 @@ class Authors extends Model
         'birthdate',
     ];
 
+    // Automatically generate ULID for primary key
     protected static function boot()
     {
         parent::boot();
+
         static::creating(function ($model) {
             if (empty($model->{$model->getKeyName()})) {
                 $model->{$model->getKeyName()} = (string) Str::ulid();
@@ -35,6 +35,7 @@ class Authors extends Model
         });
     }
 
+    // Relationships
     public function books()
     {
         return $this->belongsToMany(Books::class, 'book_authors', 'author_id', 'book_id');

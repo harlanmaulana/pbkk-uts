@@ -2,27 +2,32 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Str;
-use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\Concerns\HasUlids;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class Users1 extends Model
 {
     use HasFactory;
 
+    // Table name
     protected $table = 'users1';
+
+    // Primary key settings
     protected $primaryKey = 'user_id';
     public $incrementing = false;
     protected $keyType = 'string';
 
+    // Mass assignable attributes
     protected $fillable = [
-        'user_id', 'name', 'email', 'password', 'membership_date'
+        'user_id',
+        'name',
+        'email',
+        'password',
+        'membership_date',
     ];
 
+    // Automatically generate ULID for primary key
     protected static function boot()
     {
         parent::boot();
@@ -34,6 +39,7 @@ class Users1 extends Model
         });
     }
 
+    // Relationships
     public function loans()
     {
         return $this->hasMany(Loans::class, 'user_id', 'user_id');
